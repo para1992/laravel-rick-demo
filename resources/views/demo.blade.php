@@ -72,7 +72,11 @@
             <h1>Generate five plans.<br><em>You pick the winner.</em></h1>
             <p class="lead">A runnable Laravel Rick example: fan out into five candidates, pause for human review, then continue with the selected result.</p>
         </div>
-        <div class="zero">$0 · no API key · deterministic</div>
+        @if (config('demo.gateway') === 'deterministic')
+            <div class="zero">$0 · no API key · deterministic</div>
+        @else
+            <div class="zero">live · {{ config('demo.provider') }} · billable API</div>
+        @endif
     </section>
 
     <section class="terminal">

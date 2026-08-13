@@ -22,8 +22,11 @@ final class DemoFlowTest extends TestCase
         $review->assertOk()
             ->assertSee('Choose a plan')
             ->assertSee('Candidate 1')
-            ->assertSee('Candidate 5')
-            ->assertSee('Risk-weighted migration');
+            ->assertSee('Candidate 5');
+
+        if (config('demo.gateway') === 'deterministic') {
+            $review->assertSee('Risk-weighted migration');
+        }
 
         self::assertSame(5, substr_count($review->getContent(), 'Select this plan'));
         self::assertMatchesRegularExpression(
@@ -41,8 +44,11 @@ final class DemoFlowTest extends TestCase
         $completed = $this->get($selected->headers->get('Location'));
         $completed->assertOk()
             ->assertSee('Workflow completed')
-            ->assertSee('Strangler rollout')
-            ->assertSee('5</strong> calls', escape: false)
-            ->assertSee('75</strong> tokens', escape: false);
+            ->assertSee('5</strong> calls', escape: false);
+
+        if (config('demo.gateway') === 'deterministic') {
+            $completed->assertSee('Strangler rollout')
+                ->assertSee('75</strong> tokens', escape: false);
+        }
     }
 }
